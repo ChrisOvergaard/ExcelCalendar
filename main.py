@@ -4,7 +4,7 @@ from openpyxl import *
 from openpyxl.styles import PatternFill, Alignment, Font
 from openpyxl.utils import get_column_letter
 
-year = 2025
+year = 2026
 
 wb = Workbook()
 sheet = wb.active
@@ -60,4 +60,4 @@ for col in range(12):
         activeRow += 1
 
 
-wb.save("test.xlsx")
+wb.save("Sweeper Calendar " + str(year) + ".xlsx")
