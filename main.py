@@ -1,9 +1,10 @@
 import datetime
 
 from openpyxl import *
-from openpyxl.styles import PatternFill
+from openpyxl.styles import PatternFill, Alignment, Font
+from openpyxl.utils import get_column_letter
 
-year = 2026
+year = 2025
 
 wb = Workbook()
 sheet = wb.active
@@ -27,15 +28,22 @@ def date_format(d: datetime.datetime):
         case 6:
             return "S " + str(d.day)
 
-for col in range(0,12):
+for col in range(12):
     date = datetime.datetime(year, col+1, 1)
-    sheet.cell(1, col * 3+2, date.strftime("%B"))
+    monthCell = sheet.cell(1, col * 3+2, date.strftime("%B " + str(year)))
+    monthCell.alignment = Alignment(horizontal='center')
+    monthCell.font = Font(name='Trebuchet MS', size=9, bold=True)
+
 
 
     currentMonth = date.month
     activeRow = 2
     while date.month == currentMonth:
         dateCell = sheet.cell(activeRow,col * 3+1, date_format(date))
+
+        sheet.column_dimensions[get_column_letter(col * 3 + 1)].width = 5
+        sheet.column_dimensions[get_column_letter(col * 3 + 2)].width = 20
+        sheet.column_dimensions[get_column_letter(col * 3 + 3)].width = 5
 
         if date.weekday() == 0:
             weekNoCell = sheet.cell(activeRow, col * 3+3, date.strftime("%V"))
@@ -46,6 +54,7 @@ for col in range(0,12):
             dateCell.fill = grey_fill
         if date.weekday() >= 6:
             sheet.cell(activeRow,  col * 3+2).fill = grey_fill
+            sheet.cell(activeRow, col * 3 + 3).fill = grey_fill
 
         date = date + datetime.timedelta(days=1)
         activeRow += 1
